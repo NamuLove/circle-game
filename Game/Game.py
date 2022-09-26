@@ -3,7 +3,7 @@ class player:
     def __init__(self, hp, atk, deff, gold, exp):
         self.hp = hp
         self.atk = atk
-        self.Def = deff
+        self.deff = deff
         self.gd = gold
         self.exp = exp
     def level_up(self, enemy):
