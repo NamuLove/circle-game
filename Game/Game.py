@@ -11,6 +11,16 @@ class player:
     def level_up(self, enemy):
         enemy
 while True:
+    time.sleep(0.5)
+    print('당신은 길을 걷고 있었다?')
+    time.sleep(0.5)
+    print('당신은 떨어졌다?')
+    time.sleep(0.5)
+    print('"여기는 어디인가?"')
+    time.sleep(0.5)
+    print('나는 누구인가?')
+    time.sleep(0.5)
+    print('레벨을 올리고 보스를 격파하여 원래 세상으로 돌아가세요?')
     p1 = player(10, 8, 5, 0, 0)
     class quiz:
         def __init__(self, name, answer, result):
