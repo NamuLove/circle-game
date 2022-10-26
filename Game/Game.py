@@ -35,6 +35,7 @@ while True:
             self.answer = answer
             self.result = result
         def quiz_start(self):
+            self.result = False
             print(self.name)
             p1_input = input('답을 입력하시오')
             if self.answer == p1_input:
@@ -57,6 +58,7 @@ while True:
                 print('맞았어요!')
                 player.exp += self.exp
                 player.exp += self.gold
+
             else:
                 print('틀렸어!')
 
@@ -94,27 +96,34 @@ while True:
     quiz2 = quiz('몸의 북기를 방치하면 살이 된다?', '아니오', False)
     quest1 = quest('치즈', 10, 10)
     quest2 = quest('빵', 10, 10)
-    boss1 = boss(10,2)
+    boss1 = boss(10, 2)
     while True:
         move = input('어떤 행동을 하실 건가요?\n(이동)-()-()\n>>>')
         if move == '이동':
-            reply = input('어디로 이동하실건가요?\n(던전 퀘스트)-(보스방)\n>>>')
-
-            if reply == '던전 퀘스트':
-                while True:
-                    reply_quest = input('퀘스트를 설정하세요?\n(치즈 퀘스트)-(빵집 퀘스트)\n>>>')
-                    if reply_quest == '치즈':
-                        quest1.quest_start(quiz1, p1)
-                        break
-                    if reply_quest == '빵':
-                        quest2.quest_start(quiz2, p1)
-            elif reply == '보스방':
-                while True:
-                    reply_boss = input('보스를 선택하세요?(보스1)')
-                    if reply_boss == '보스1':
-                        boss1.boss_atk(p1)
-                        break
-            else:
-                print()
+            while True:
+                reply = input('어디로 이동하실건가요?\n(던전 퀘스트)-(보스방)-(뒤로가기)\n>>>')
+                if reply == '던전 퀘스트':
+                    while True:
+                        reply_quest = input('퀘스트를 선택하세요?\n(치즈 퀘스트)-(빵집 퀘스트)-(뒤로가기)\n>>>')
+                        if reply_quest == '치즈 퀘스트':
+                            quest1.quest_start(quiz1, p1)
+                            break
+                        if reply_quest == '빵집 퀘스트':
+                            quest2.quest_start(quiz2, p1)
+                            break
+                        if reply_quest == '뒤로가기':
+                            break
+                elif reply == '보스방':
+                    while True:
+                        reply_boss = input('보스를 선택하세요?\n(보스1)-(뒤로가기)\n>>>')
+                        if reply_boss == '보스1':
+                            boss1.boss_atk(p1)
+                            break
+                        if reply_boss == '뒤로가기':
+                            break
+                elif reply == '뒤로가기':
+                    break
+                else:
+                    print('다시 입력해주시겠어요?')
 
 
