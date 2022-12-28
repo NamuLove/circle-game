@@ -18,12 +18,12 @@ class player:
         time.sleep(0.1)
         print('{}의 피해를 준다?'.format(self.atk))
         time.sleep(0.1)
-        print('적은 체력이 {} 남았다'.format(enemy.hp))
+        print('{} 체력이 {} 남았다'.format(enemy.name, enemy.hp))
         time.sleep(0.1)
         print('===================')
         time.sleep(0.1)
     def player_def(self):
-        self.battle_def = self.deff * 2
+        self.deff = self.deff * 2
     def battle_gain(self, enemy):
         self.gold += enemy.gold
         self.exp += enemy.exp
@@ -109,13 +109,20 @@ while True:
             self.gold = gold
             self.name = name
         def boss_atk(self, p):
-            print('==========보스 차례==========')
+            print('=========={}의 차례=========='.format(self.name))
             time.sleep(0.1)
-            p.hp -= self.atk + p.battle_def
-            print('{}의 피해를 받았다.?'.format(self.atk))
-            time.sleep(0.1)
-            print('나의 체력은 {}만 남았다?'.format(p.hp))
-            time.sleep(0.1)
+            if self.atk > p.deff:
+                p.hp -= self.atk - p.deff
+                print('{}의 피해를 받았다.?'.format(self.atk - p.deff))
+                time.sleep(0.1)
+                print('플레이어의 체력은 {}만 남았다?'.format(p.hp))
+                time.sleep(0.1)
+            else:
+                p.hp -= 0
+                print('{}의 피해를 받았다.?'.format(0))
+                time.sleep(0.1)
+                print('플레이어의 체력은 {}만 남았다?'.format(p.hp))
+                time.sleep(0.1)
             print('====================')
             time.sleep(0.1)
 
@@ -129,7 +136,7 @@ while True:
             elif player_battle_decision == '2':
                 player.player_def()
             elif player_battle_decision == '3':
-                print('\n====================\n보스\n체력: {}-공격력: {}\n===================='.format(enemy.hp, enemy.atk))
+                print('\n====================\n{}\n체력: {}-공격력: {}\n===================='.format(enemy.name, enemy.hp, enemy.atk))
             time.sleep(0.5)
             if enemy.hp <= 0:
                 time.sleep(0.5)
@@ -138,7 +145,10 @@ while True:
                 level1.level_up(player)
                 enemy.hp = enemy.fhp
                 break
+
             enemy.boss_atk(player)
+            if player_battle_decision == '2':
+                player.deff = player.deff/2
             if player.hp <= 0:
                 print('너의 패배')
                 break
@@ -147,11 +157,12 @@ while True:
     quest1 = quest('치즈', 2, 5)
     quest2 = quest('빵', 2, 5)
 
-    boss1 = boss(20, 20, 8, 5, 20, '오물킹')
-    boss2 = boss(30, 30, 6, 30, 30, '옥상황제')
-    ene1 = boss(10, 10, 5, 2, 10, '쥐돌이')
-    ene2 = boss(12, 12, 4, 2, 10, '멸치 시체')
-    ene3 = boss(12, 12, 4, 2, 10, '기이과인')
+    boss1 = boss(60, 60, 25, 40, 100, '오물킹')
+    boss2 = boss(100, 100, 6, 100, 200, '옥상황제')
+    ene1 = boss(10, 10, 10, 2, 10, '쥐돌이')
+    ene2 = boss(20, 20, 15, 10, 12, '멸치 시체')
+    ene3 = boss(45, 45, 20, 15, 20, '기이과인')
+    ene4 = boss(70, 70, 30, 20, 30, '떨어진 보노보노인형')
     while True:
         move = input('===================\n어떤 행동을 하실 건가요?\n(이동-1)-(상태 확인-2)-(의료실-3)\n숫자를 입력하세요>>>')
         time.sleep(0.5)
@@ -159,7 +170,7 @@ while True:
         if move == '1':
             travel = True
             while travel:
-                reply = input('===================\n어디로 이동하실건가요?\n(던전 퀘스트-1)-(보스방-2)-(던전-3)(뒤로가기-0)\n숫자를 입력하세요>>>')
+                reply = input('===================\n어디로 이동하실건가요?\n(던전 퀘스트-1)-(보스방-2)-(던전-3)-(뒤로가기-0)\n숫자를 입력하세요>>>')
                 time.sleep(0.5)
 
                 if reply == '1':
@@ -184,13 +195,21 @@ while True:
                         reply_boss = input('===================\n보스를 선택하세요?\n(중간 보스방<1>-1)-(최종 보스<2>-2)(뒤로가기-0)\n숫자를 입력하세요>>>')
                         time.sleep(0.5)
                         if reply_boss == '1':
-                            battle(boss1, p1)
                             travel = False
+                            battle(boss1, p1)
+                            if p1.hp > 0:
+                                p1.key = 1
+                                print('최종 보스방의 키를 획득하였다!')
                             break
                         if reply_boss == '2':
-                            battle(boss2, p1)
-                            travel = False
-                            break
+                            if p1.key == 0:
+                                print('키가 없습니다. 중간 보스를 깨서 키를 가져오세요!')
+                                break
+                            elif p1.key == 1:
+                                print('당신은 키로 문을 열고 들어갔습니다.')
+                                travel = False
+                                battle(boss2, p1)
+                                break
                         elif reply_boss == '0':
                             break
                         else:
@@ -198,23 +217,153 @@ while True:
                             time.sleep(0.5)
                 elif reply == '3':
                     while True:
-                        reply_dungeon = input('===================\n던전를 선택하세요?\n(던전1-1)-(던전2-2)-(뒤로가기-0)\n숫자를 입력하세요>>>')
+                        reply_dungeon = input('===================\n던전를 선택하세요?\n(던전1-1)-(던전2-2)-(던전3-3)-(던전4-4)-(던전5-5)-(던전6-6)-(뒤로가기-0)\n숫자를 입력하세요>>>')
                         time.sleep(0.5)
                         if reply_dungeon == '1':
+                            travel = False
                             print('=========첫번째 적=========')
                             time.sleep(1)
                             battle(ene1, p1)
+                            if p1.hp <= 0:
+                                break
                             print('=========두번째 적=========')
                             time.sleep(1)
                             battle(ene1, p1)
+                            if p1.hp <= 0:
+                                break
                             print('=========세번째 적=========')
                             time.sleep(1)
                             battle(ene1, p1)
-                            travel = False
+                            if p1.hp <= 0:
+                                break
                             break
                         elif reply_dungeon == '2':
-                            print()
-
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene1, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                        elif reply_dungeon == '3':
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene1, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========네번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                        elif reply_dungeon == '4':
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========네번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                        elif reply_dungeon == '4':
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========네번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                        elif reply_dungeon == '5':
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene4, p1)
+                            if p1.hp <= 0:
+                                break
+                        elif reply_dungeon == '6':
+                            travel = False
+                            print('=========첫번째 적=========')
+                            time.sleep(1)
+                            battle(ene2, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========두번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========세번째 적=========')
+                            time.sleep(1)
+                            battle(ene3, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========네번째 적=========')
+                            time.sleep(1)
+                            battle(ene4, p1)
+                            if p1.hp <= 0:
+                                break
+                            print('=========다섯번째 적=========')
+                            time.sleep(1)
+                            battle(ene4, p1)
+                            if p1.hp <= 0:
+                                break
                         elif reply_dungeon == '0':
                             break
                 elif reply == '0':
@@ -243,7 +392,7 @@ while True:
                     if p1.gold >= 15:
                         p1.gold = p1.gold - 15
                         p1.hp = p1.fhp
-                        print('치료했습니다.(현재 체력:{}'.format(p1.hp))
+                        print('치료했습니다.(현재 체력:{})'.format(p1.hp))
                         break
                     else:
                         print('돈이 부족합니다.')
