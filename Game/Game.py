@@ -1,4 +1,5 @@
-#game 2022.09.21
+#game 2022.09.21.
+#백진우, 고강민, 박시후, 김가인
 import time
 import random
 class player:
