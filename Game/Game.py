@@ -155,8 +155,8 @@ while True:
                 break
     quiz1 = quiz('손톱은 발톱보다 더 빨리 자란다?', '네', False)
     quiz2 = quiz('몸의 북기를 방치하면 살이 된다?', '아니오', False)
-    quest1 = quest('치즈', 2, 5)
-    quest2 = quest('빵', 2, 5)
+    quest1 = quest('치즈', 1, 5)
+    quest2 = quest('빵', 1, 5)
 
     boss1 = boss(60, 60, 60, 40, 100, '오물킹')
     boss2 = boss(100, 100, 90, 100, 200, '옥상황제')
