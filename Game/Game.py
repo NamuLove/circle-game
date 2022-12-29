@@ -209,6 +209,8 @@ while True:
                                 print('당신은 키로 문을 열고 들어갔습니다.')
                                 travel = False
                                 battle(boss2, p1)
+                                if p1.hp > 0:
+                                    p1.key += 1
                                 break
                         elif reply_boss == '0':
                             break
@@ -403,4 +405,12 @@ while True:
 
         if p1.hp <= 0:
             print('플레이어: 깨꼬닭!\n======================\n당신은 사망했습니다\n======================')
+            break
+        if p1.key == 2:
+            print('당신은 최종 보스를 깼습니다!')
+            time.sleep(0.5)
+            print('당신은 지상으로 올라왔습니다!')
+            time.sleep(0.5)
+            print('당신은 다시 집으로 돌아가고 있습니다.')
+            time.sleep(0.5)
             break
